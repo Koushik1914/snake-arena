@@ -16,8 +16,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # ── 1. Build shared package FIRST (server imports compiled shared at build time) ──
-COPY shared/package.json ./shared/
-COPY shared/src          ./shared/src
+COPY shared/package.json  ./shared/
+COPY shared/tsconfig.json ./shared/
+COPY shared/src           ./shared/src
 RUN npm install --prefix shared && npm run build --prefix shared
 
 # ── 2. Server dependencies (snake-arena-shared resolves via file:../shared) ─
