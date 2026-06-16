@@ -4,9 +4,10 @@
   "description": "TypeScript WebSocket Authoritative Game Server",
   "main": "dist/server.js",
   "scripts": {
-    "build:addon": "node-gyp rebuild",
+    "install": "node-gyp rebuild || node -e \"console.warn('Native addon build failed. Server will run in TS fallback mode.')\"",
+    "build:addon": "node-gyp rebuild || node -e \"console.warn('Native addon build failed. Server will run in TS fallback mode.')\"",
     "build:ts": "tsc",
-    "build": "node-gyp rebuild && tsc",
+    "build": "npm run build:addon && npm run build:ts",
     "dev": "nodemon --watch \"src/**/*\" -e ts --exec \"ts-node\" src/server.ts",
     "start": "node dist/server.js"
   },
