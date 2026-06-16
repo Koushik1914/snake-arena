@@ -16,27 +16,27 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# ── Install root workspace deps ──────────────────────────────────────────────
-COPY package.json package-lock.json* ./
-RUN npm install
+# ── Install shared workspace ─────────────────────────────────────────────────
+COPY shared/package.json ./shared/
+RUN npm install --prefix shared
 
 # ── Install server deps (includes node-addon-api for N-API) ─────────────────
 COPY server/package.json server/package-lock.json* ./server/
-RUN npm install --prefix server
+RUN npm ci --prefix server
 
 # ── Install client deps (PixiJS, msgpack, vite, etc.) ───────────────────────
 COPY client/package.json client/package-lock.json* ./client/
-RUN npm install --prefix client
+RUN npm ci --prefix client
 
-# ── Copy source files ────────────────────────────────────────────────────────
+# ── Copy all source files ────────────────────────────────────────────────────
 COPY shared  ./shared
 COPY server  ./server
 COPY client  ./client
 
-# ── Compile C++ N-API addon (with O2 optimization) ───────────────────────────
+# ── Compile C++ N-API addon + TypeScript server ──────────────────────────────
 RUN npm run build --prefix server
 
-# ── Bundle frontend assets ───────────────────────────────────────────────────
+# ── Bundle frontend assets (Vite production build) ───────────────────────────
 RUN npm run build --prefix client
 
 # ===========================================================================
@@ -49,17 +49,27 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-# Copy only production server dependencies
-COPY server/package.json ./server/
-RUN npm install --prefix server --only=production
+# Install glibc-compatible runtime libs (needed by the C++ addon)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libstdc++6 libgcc-s1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy server package files and install production-only deps
+COPY server/package.json server/package-lock.json* ./server/
+RUN npm ci --prefix server --only=production
 
 # Copy compiled artifacts from builder
 COPY --from=builder /app/server/dist   ./server/dist
 COPY --from=builder /app/server/build  ./server/build
 COPY --from=builder /app/client/dist   ./client/dist
 
+# Create non-root user for security
+RUN groupadd -r snake && useradd -r -g snake snake \
+    && mkdir -p /app/logs && chown -R snake:snake /app
+USER snake
+
 # Health check for Docker orchestrators / load balancers
-HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=15s --timeout=5s --start-period=15s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
 EXPOSE 3000

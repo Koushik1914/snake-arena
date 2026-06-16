@@ -1,16 +1,23 @@
 {
   "name": "snake-arena-root",
   "version": "1.0.0",
+  "private": true,
   "description": "Multiplayer Snake Arena Game Root Package",
   "scripts": {
     "bootstrap": "npm run install-all",
-    "install-all": "npm install && npm install --prefix server && npm install --prefix client",
+
+    "install-all": "npm install --prefix client && npm install --prefix server",
+
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
+
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "build:server": "npm run build --prefix server",
+
     "build:client": "npm run build --prefix client",
-    "build": "npm run build:client && npm run build:server",
+    "build:server": "npm run build --prefix server",
+
+    "build": "npm install --prefix client && npm install --prefix server && npm run build:client && npm run build:server",
+
     "start": "npm run start --prefix server"
   },
   "devDependencies": {
