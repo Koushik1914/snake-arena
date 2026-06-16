@@ -2,25 +2,32 @@
   "name": "snake-arena-root",
   "version": "1.0.0",
   "private": true,
-  "description": "Multiplayer Snake Arena Game Root Package",
+  "description": "Multiplayer Snake Arena Game — Monorepo Root",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "bootstrap": "npm run install-all",
 
-    "install-all": "npm install --prefix client && npm install --prefix server",
+    "install-all": "npm install --prefix shared && npm install --prefix client && npm install --prefix server",
 
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix client",
-
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
 
-    "build:client": "npm run build --prefix client",
-    "build:server": "npm run build --prefix server",
+    "build:client": "npm install --prefix client && npm run build --prefix client",
+    "build:server": "npm install --prefix server && npm run build --prefix server",
+    "build:server:ts-only": "npm run build:ts --prefix server",
 
-    "build": "npm install --prefix client && npm install --prefix server && npm run build:client && npm run build:server",
+    "build": "npm run install-all && npm run build --prefix client && npm run build --prefix server",
 
-    "start": "npm run start --prefix server"
+    "start": "npm run start --prefix server",
+
+    "clean": "npx rimraf client/dist server/dist server/build"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
   }
 }

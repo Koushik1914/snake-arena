@@ -53,21 +53,21 @@ else
   log "PM2 $(pm2 --version) already installed."
 fi
 
-# ─── 4. Install shared workspace ───────────────────────────────────────────
-log "Installing shared dependencies..."
+# ─── 4. Install all workspace packages ─────────────────────────────────────
+log "Installing all dependencies (shared, client, server)..."
 npm install --prefix shared
-
-# ─── 5. Install & build server (C++ addon + TypeScript) ────────────────────
-log "Installing server dependencies..."
+npm ci --prefix client
 npm ci --prefix server
 
-log "Building server (TypeScript + C++ native addon)..."
-npm run build --prefix server
+# ─── 5. Build server C++ native addon ──────────────────────────────────────
+log "Building C++ native addon (node-gyp)..."
+npm run build:addon --prefix server
 
-# ─── 6. Install & build client (Vite) ──────────────────────────────────────
-log "Installing client dependencies..."
-npm ci --prefix client
+# ─── 6. Compile TypeScript server ──────────────────────────────────────────
+log "Compiling TypeScript server..."
+npm run build:ts --prefix server
 
+# ─── 7. Build Vite frontend ──────────────────────────────────────────────────
 log "Building client (Vite production bundle)..."
 npm run build --prefix client
 

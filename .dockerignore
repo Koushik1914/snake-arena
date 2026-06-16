@@ -1,0 +1,53 @@
+# ============================================================
+# .dockerignore — Snake Arena
+# ============================================================
+# Prevents unnecessary files from being sent to Docker build context.
+# Keeps the build fast and the image lean.
+
+# Node modules (installed fresh inside Docker)
+node_modules/
+**/node_modules/
+
+# Local build artifacts (rebuilt inside Docker)
+client/dist/
+server/dist/
+
+# Native addon build artifacts (rebuilt inside Docker)
+server/build/
+**/*.node
+
+# Git history
+.git/
+.gitignore
+
+# CI/CD configs
+.github/
+
+# Local environment
+.env
+.env.local
+server/.env
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Documentation (not needed in runtime image)
+*.md
+LICENSE
+
+# PM2
+.pm2/
+ecosystem.config.js
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
