@@ -11,6 +11,7 @@ node_modules/
 # Local build artifacts (rebuilt inside Docker)
 client/dist/
 server/dist/
+shared/dist/
 
 # Native addon build artifacts (rebuilt inside Docker)
 server/build/
