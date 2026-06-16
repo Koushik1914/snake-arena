@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+client/dist/
+server/dist/
+shared/dist/
+
+# Native addon build artifacts
+server/build/
+server/src/native/*.node
+server/src/native/*.o
+server/src/native/*.a
+*.node
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# PM2
+.pm2/
