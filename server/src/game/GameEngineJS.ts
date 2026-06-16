@@ -12,7 +12,7 @@ import {
   SNAKE_MIN_BOOST_MASS,
   SNAKE_BOOST_MASS_LOSS,
   SNAKE_INITIAL_MASS,
-} from '../../../shared/src/constants';
+} from 'snake-arena-shared/constants';
 
 interface Segment {
   x: number;

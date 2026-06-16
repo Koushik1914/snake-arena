@@ -2,12 +2,27 @@
   "name": "snake-arena-shared",
   "version": "1.0.0",
   "description": "Shared types and constants for Snake Arena",
-  "main": "./src/protocol.ts",
-  "types": "./src/protocol.ts",
+  "main": "./dist/protocol.js",
+  "types": "./dist/protocol.d.ts",
   "exports": {
-    ".": "./src/protocol.ts",
-    "./constants": "./src/constants.ts",
-    "./protocol": "./src/protocol.ts"
+    ".": {
+      "require": "./dist/protocol.js",
+      "types": "./dist/protocol.d.ts"
+    },
+    "./protocol": {
+      "require": "./dist/protocol.js",
+      "types": "./dist/protocol.d.ts"
+    },
+    "./constants": {
+      "require": "./dist/constants.js",
+      "types": "./dist/constants.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "snake-arena-root": "file:.."

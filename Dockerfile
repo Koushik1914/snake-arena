@@ -15,13 +15,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# ── 1. Shared package (source, no build step needed) ────────────────────────
+# ── 1. Build shared package FIRST (server imports compiled shared at build time) ──
 COPY shared/package.json ./shared/
 COPY shared/src          ./shared/src
+RUN npm install --prefix shared && npm run build --prefix shared
 
-# ── 2. Server dependencies (includes node-addon-api) ────────────────────────
+# ── 2. Server dependencies (snake-arena-shared resolves via file:../shared) ─
 COPY server/package.json server/package-lock.json* ./server/
-RUN npm ci --prefix server
+RUN npm install --prefix server
 
 # ── 3. Client dependencies ────────────────────────────────────────────────────
 COPY client/package.json client/package-lock.json* ./client/
@@ -32,12 +33,12 @@ COPY server ./server
 COPY client ./client
 
 # ── 5. Build C++ N-API native addon ─────────────────────────────────────────
-# Runs node-gyp rebuild from within server/ where binding.gyp lives
 WORKDIR /app/server
 RUN npm run build:addon
 WORKDIR /app
 
 # ── 6. Compile TypeScript server ────────────────────────────────────────────
+# shared/dist/*.d.ts must exist for TypeScript paths resolution to work
 RUN npm run build:ts --prefix server
 
 # ── 7. Build Vite frontend ───────────────────────────────────────────────────
@@ -58,17 +59,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libstdc++6 libgcc-s1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Production-only server dependencies
-COPY server/package.json server/package-lock.json* ./server/
-RUN npm ci --prefix server --omit=dev
+# ── Copy shared dist so npm install can resolve file:../shared ───────────────
+# npm install with "snake-arena-shared": "file:../shared" needs ../shared to exist
+COPY shared/package.json ./shared/
+COPY --from=builder /app/shared/dist ./shared/dist
 
-# Compiled server TypeScript → JS
+# ── Install server production-only deps ──────────────────────────────────────
+COPY server/package.json server/package-lock.json* ./server/
+RUN npm install --prefix server --omit=dev
+
+# ── Copy compiled server output ───────────────────────────────────────────────
 COPY --from=builder /app/server/dist ./server/dist
 
-# Compiled C++ native addon
+# ── Copy compiled C++ native addon ───────────────────────────────────────────
 COPY --from=builder /app/server/build ./server/build
 
-# Compiled frontend (served statically by Express)
+# ── Copy compiled frontend (served statically by Express) ────────────────────
 COPY --from=builder /app/client/dist ./client/dist
 
 # Non-root user for security

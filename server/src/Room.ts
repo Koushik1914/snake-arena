@@ -1,7 +1,7 @@
 import { WebSocket } from 'ws';
 import { encode } from '@msgpack/msgpack';
-import { MessageType } from '../../shared/src/protocol';
-import { MAX_PLAYERS_PER_ROOM, TICK_RATE, MAP_SIZE } from '../../shared/src/constants';
+import { MessageType } from 'snake-arena-shared/protocol';
+import { MAX_PLAYERS_PER_ROOM, TICK_RATE, MAP_SIZE } from 'snake-arena-shared/constants';
 import { PlayerConnection } from './PlayerConnection';
 
 import { GameEngineJS } from './game/GameEngineJS';

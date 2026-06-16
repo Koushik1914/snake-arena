@@ -15,6 +15,7 @@
     "express": "^4.19.2",
     "node-addon-api": "^8.8.0",
     "snake-arena-root": "file:..",
+    "snake-arena-shared": "file:../shared",
     "ws": "^8.17.0"
   },
   "devDependencies": {

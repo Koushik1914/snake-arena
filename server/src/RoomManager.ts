@@ -1,7 +1,7 @@
 import { WebSocket } from 'ws';
 import { encode, decode } from '@msgpack/msgpack';
-import { MessageType } from '../../shared/src/protocol';
-import { MAX_PLAYERS_PER_ROOM, HEARTBEAT_TIMEOUT } from '../../shared/src/constants';
+import { MessageType } from 'snake-arena-shared/protocol';
+import { MAX_PLAYERS_PER_ROOM, HEARTBEAT_TIMEOUT } from 'snake-arena-shared/constants';
 import { Room } from './Room';
 import { PlayerConnection } from './PlayerConnection';
 

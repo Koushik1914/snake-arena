@@ -3,4 +3,4 @@
  * This file exists for backward compatibility with any internal server imports.
  * Prefer importing directly from 'snake-arena-shared/protocol' in new code.
  */
-export * from '../../../shared/src/protocol';
+export * from 'snake-arena-shared/protocol';

@@ -10,12 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "baseUrl": ".",
-    "paths": {
-      "snake-arena-shared/constants": ["../shared/dist/constants"],
-      "snake-arena-shared/protocol":  ["../shared/dist/protocol"],
-      "snake-arena-shared":           ["../shared/dist/protocol"]
-    }
+    "declarationMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

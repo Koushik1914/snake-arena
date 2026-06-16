@@ -16,15 +16,17 @@
     "dev:client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
 
-    "build:client": "npm install --prefix client && npm run build --prefix client",
-    "build:server": "npm install --prefix server && npm run build --prefix server",
-    "build:server:ts-only": "npm run build:ts --prefix server",
+    "build:shared": "npm install --prefix shared && npm run build --prefix shared",
+    "build:client": "npm run build --prefix client",
+    "build:server:ts": "npm run build:ts --prefix server",
+    "build:server:addon": "npm run build:addon --prefix server",
+    "build:server": "npm run build:server:addon && npm run build:server:ts",
 
-    "build": "npm run install-all && npm run build --prefix client && npm run build --prefix server",
+    "build": "npm run build:shared && npm install --prefix client && npm install --prefix server && npm run build:server:addon && npm run build:server:ts && npm run build:client",
 
     "start": "npm run start --prefix server",
 
-    "clean": "npx rimraf client/dist server/dist server/build"
+    "clean": "npx rimraf client/dist server/dist server/build shared/dist"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
